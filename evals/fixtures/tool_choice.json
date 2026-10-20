@@ -1,0 +1,319 @@
+{
+  "note": "Hand-authored reference-model responses for offline replay, keyed by case id and step number. Not captured from a live provider. Cases with \"deliberateFailure\" are wrong on purpose so the report shows real scoring.",
+  "route": {
+    "provider": "replay",
+    "model": "claude-haiku-4-5"
+  },
+  "cases": {
+    "tc-01": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "list_practitioners",
+              "args": {}
+            }
+          ],
+          "usage": {
+            "in": 1527,
+            "out": 47
+          },
+          "latencyMs": 427
+        },
+        "2": {
+          "text": "The clinic has Dr. Mira Okafor (General practice), Dr. Jonas Lindqvist (Physiotherapy) and Dr. Priya Raman (Nutrition).",
+          "usage": {
+            "in": 1306,
+            "out": 126
+          },
+          "latencyMs": 896
+        }
+      }
+    },
+    "tc-02": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "search_clients",
+              "args": {
+                "query": "Chloe Ito"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1528,
+            "out": 48
+          },
+          "latencyMs": 428
+        },
+        "2": {
+          "text": "Chloe Ito is client c-007 (chloe.ito.7@example.test).",
+          "usage": {
+            "in": 1307,
+            "out": 127
+          },
+          "latencyMs": 897
+        }
+      }
+    },
+    "tc-03": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "get_clinic_stats",
+              "args": {
+                "period": "last_30_days"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1529,
+            "out": 49
+          },
+          "latencyMs": 429
+        },
+        "2": {
+          "text": "Over the last 30 days the clinic had 52 appointments.",
+          "usage": {
+            "in": 1308,
+            "out": 128
+          },
+          "latencyMs": 898
+        }
+      }
+    },
+    "tc-04": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "get_client_notes",
+              "args": {
+                "clientId": "c-001"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1530,
+            "out": 50
+          },
+          "latencyMs": 430
+        },
+        "2": {
+          "text": "Client c-001 has one note: \"Referred by a family member.\"",
+          "usage": {
+            "in": 1309,
+            "out": 129
+          },
+          "latencyMs": 899
+        }
+      }
+    },
+    "tc-05": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "list_practitioners",
+              "args": {}
+            }
+          ],
+          "usage": {
+            "in": 1531,
+            "out": 51
+          },
+          "latencyMs": 431
+        },
+        "2": {
+          "toolCalls": [
+            {
+              "name": "find_free_slots",
+              "args": {
+                "practitionerId": "p-3",
+                "from": "2026-10-26",
+                "to": "2026-10-28"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1310,
+            "out": 50
+          },
+          "latencyMs": 550
+        },
+        "3": {
+          "text": "Dr. Raman has many open slots; the first is Monday 26 Oct at 09:00 UTC.",
+          "usage": {
+            "in": 1789,
+            "out": 129
+          },
+          "latencyMs": 1019
+        }
+      }
+    },
+    "tc-06": {
+      "deliberateFailure": "Answers from the search result alone and never lists the client's appointments (missing list_appointments).",
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "search_clients",
+              "args": {
+                "query": "Hugo Dube"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1532,
+            "out": 52
+          },
+          "latencyMs": 432
+        },
+        "2": {
+          "text": "Hugo Dube is client c-002. His next appointment should be sometime in early November.",
+          "usage": {
+            "in": 1311,
+            "out": 131
+          },
+          "latencyMs": 901
+        }
+      }
+    },
+    "tc-07": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "create_appointment",
+              "args": {
+                "clientId": "c-001",
+                "practitionerId": "p-1",
+                "start": "2026-10-26T09:00:00.000Z",
+                "reason": "Follow-up"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1533,
+            "out": 53
+          },
+          "latencyMs": 433
+        }
+      }
+    },
+    "tc-08": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "cancel_appointment",
+              "args": {
+                "appointmentId": "a-057"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1534,
+            "out": 54
+          },
+          "latencyMs": 434
+        }
+      }
+    },
+    "tc-09": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "add_client_note",
+              "args": {
+                "clientId": "c-004",
+                "text": "Asked to be called after 5pm."
+              }
+            }
+          ],
+          "usage": {
+            "in": 1535,
+            "out": 55
+          },
+          "latencyMs": 435
+        }
+      }
+    },
+    "tc-10": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "create_client",
+              "args": {
+                "name": "Maya Solberg",
+                "email": "maya.solberg@example.test"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1557,
+            "out": 77
+          },
+          "latencyMs": 457
+        }
+      }
+    },
+    "tc-11": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "reschedule_appointment",
+              "args": {
+                "appointmentId": "a-057",
+                "start": "2026-11-03T10:00:00.000Z"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1558,
+            "out": 78
+          },
+          "latencyMs": 458
+        }
+      }
+    },
+    "tc-12": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "get_client",
+              "args": {
+                "id": "c-012"
+              }
+            },
+            {
+              "name": "list_appointments",
+              "args": {
+                "clientId": "c-012"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1559,
+            "out": 79
+          },
+          "latencyMs": 459
+        },
+        "2": {
+          "text": "Rosa Dube (c-012) has the appointments listed above.",
+          "usage": {
+            "in": 1338,
+            "out": 158
+          },
+          "latencyMs": 928
+        }
+      }
+    }
+  }
+}

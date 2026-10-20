@@ -1,0 +1,246 @@
+{
+  "note": "Hand-authored reference-model responses for offline replay, keyed by case id and step number. Not captured from a live provider. Cases with \"deliberateFailure\" are wrong on purpose so the report shows real scoring.",
+  "route": {
+    "provider": "replay",
+    "model": "claude-haiku-4-5"
+  },
+  "cases": {
+    "ar-01": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "list_appointments",
+              "args": {
+                "practitionerId": "p-2",
+                "status": "scheduled",
+                "from": "2026-10-20",
+                "to": "2026-10-23"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1093,
+            "out": 53
+          },
+          "latencyMs": 593
+        },
+        "2": {
+          "text": "Dr. Lindqvist has two scheduled appointments in that window: a-037 and a-070.",
+          "usage": {
+            "in": 1572,
+            "out": 92
+          },
+          "latencyMs": 1062
+        }
+      }
+    },
+    "ar-02": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "find_free_slots",
+              "args": {
+                "practitionerId": "p-1",
+                "from": "2026-10-26",
+                "to": "2026-10-28"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1094,
+            "out": 54
+          },
+          "latencyMs": 594
+        },
+        "2": {
+          "text": "Dr. Okafor is open from 09:00 UTC on all three days.",
+          "usage": {
+            "in": 1573,
+            "out": 93
+          },
+          "latencyMs": 1063
+        }
+      }
+    },
+    "ar-03": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "get_clinic_stats",
+              "args": {
+                "period": "last_7_days"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1095,
+            "out": 55
+          },
+          "latencyMs": 595
+        },
+        "2": {
+          "text": "There were 17 appointments in the last 7 days: 12 completed and 5 cancelled.",
+          "usage": {
+            "in": 1574,
+            "out": 94
+          },
+          "latencyMs": 1064
+        }
+      }
+    },
+    "ar-04": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "get_client_notes",
+              "args": {
+                "clientId": "c-005"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1096,
+            "out": 56
+          },
+          "latencyMs": 596
+        },
+        "2": {
+          "text": "The only note on c-005 says the client prefers morning appointments.",
+          "usage": {
+            "in": 1575,
+            "out": 95
+          },
+          "latencyMs": 1065
+        }
+      }
+    },
+    "ar-05": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "create_appointment",
+              "args": {
+                "clientId": "c-002",
+                "practitionerId": "p-3",
+                "start": "2026-10-27T14:00:00.000Z",
+                "reason": "Check-up"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1097,
+            "out": 57
+          },
+          "latencyMs": 597
+        }
+      }
+    },
+    "ar-06": {
+      "deliberateFailure": "Reschedules to 2026-10-24 instead of the requested 2026-10-23 (wrong date argument).",
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "reschedule_appointment",
+              "args": {
+                "appointmentId": "a-070",
+                "start": "2026-10-24T10:00:00.000Z"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1098,
+            "out": 58
+          },
+          "latencyMs": 598
+        }
+      }
+    },
+    "ar-07": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "cancel_appointment",
+              "args": {
+                "appointmentId": "a-066"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1099,
+            "out": 59
+          },
+          "latencyMs": 599
+        }
+      }
+    },
+    "ar-08": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "create_client",
+              "args": {
+                "name": "Tomas Weiss",
+                "email": "tomas.weiss@example.test",
+                "phone": "+1-555-0199"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1100,
+            "out": 60
+          },
+          "latencyMs": 600
+        }
+      }
+    },
+    "ar-09": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "add_client_note",
+              "args": {
+                "clientId": "c-006",
+                "text": "Patient reports a new knee brace."
+              }
+            }
+          ],
+          "usage": {
+            "in": 1101,
+            "out": 61
+          },
+          "latencyMs": 601
+        }
+      }
+    },
+    "ar-10": {
+      "steps": {
+        "1": {
+          "toolCalls": [
+            {
+              "name": "create_appointment",
+              "args": {
+                "practitionerId": "p-1",
+                "start": "2026-10-27T11:00:00.000Z",
+                "reason": "Consultation"
+              }
+            }
+          ],
+          "usage": {
+            "in": 1123,
+            "out": 43
+          },
+          "latencyMs": 623
+        }
+      }
+    }
+  }
+}
