@@ -4,6 +4,8 @@ A small, production-shaped tool-calling agent in TypeScript. It is built around 
 
 The domain is a fictional clinic: practitioners, clients and appointments, with seed data generated deterministically. The design follows a pattern from an agent I run in production; this repository is a clean-room rewrite of that pattern, with no production code in it.
 
+Requires Node.js 22.12 or newer.
+
 ```
 npm install
 cp .env.example .env      # optional: add any of the four provider keys
