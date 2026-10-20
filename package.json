@@ -1,0 +1,39 @@
+{
+  "name": "tool-calling-agent",
+  "version": "0.1.0",
+  "description": "Production-style tool-calling agent demo with RBAC, proposals, routing and metering",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "eval": "tsx evals/runner.ts",
+    "eval:replay": "tsx evals/runner.ts --replay",
+    "report": "tsx src/metering/report.ts",
+    "mcp": "tsx src/mcp/server.ts",
+    "mcp:http": "tsx src/mcp/server.ts --http",
+    "demo": "tsx src/cli/demo.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "@google/genai": "^2.30.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "better-sqlite3": "^13.0.3",
+    "openai": "^7.39.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^26.6.5",
+    "eslint": "^10.13.0",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5"
+  }
+}
