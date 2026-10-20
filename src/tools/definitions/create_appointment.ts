@@ -16,6 +16,8 @@ export const createAppointment = defineTool({
   }),
   summarize: (a) => `Book ${a.start} with ${a.practitionerId}${a.clientId ? ` for ${a.clientId}` : ''} (${a.reason})`,
   confirmLabel: 'Book appointment',
+  // The proposal must show the client the booking is really for, not whatever id the model guessed.
+  prepare: (args, ctx) => ({ ...args, clientId: scopeClientId(args.clientId, ctx) }),
   handler: async (args, ctx) => {
     const clientId = scopeClientId(args.clientId, ctx);
     return ctx.store.createAppointment({ ...args, clientId }, ctx.now);

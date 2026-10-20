@@ -11,6 +11,10 @@ export const rescheduleAppointment = defineTool({
   input: z.object({ appointmentId: z.string(), start: z.iso.datetime() }),
   summarize: (a) => `Move ${a.appointmentId} to ${a.start}`,
   confirmLabel: 'Reschedule',
+  prepare: (args, ctx) => {
+    requireVisibleAppointment(args.appointmentId, ctx);
+    return args;
+  },
   handler: async (args, ctx) => {
     requireVisibleAppointment(args.appointmentId, ctx);
     return ctx.store.rescheduleAppointment(args.appointmentId, args.start, ctx.now);

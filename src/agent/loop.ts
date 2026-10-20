@@ -101,7 +101,15 @@ export async function runAgent(opts: RunAgentOptions): Promise<AgentResult> {
           reply(err('Write tools must be requested alone in their own turn. Propose this action separately.'));
           continue;
         }
-        const proposal = proposals.create(tool.name, parsed.data as Record<string, unknown>, actor, ctx.now);
+        // Dry-run first: never show a confirm card for an action that would be refused anyway.
+        let prepared: unknown = parsed.data;
+        try {
+          if (tool.prepare) prepared = tool.prepare(parsed.data, ctx);
+        } catch (e) {
+          reply(err(e instanceof Error ? e.message : String(e)));
+          continue;
+        }
+        const proposal = proposals.create(tool.name, prepared as Record<string, unknown>, actor, ctx.now);
         return { kind: 'proposal', proposal, steps };
       }
       try {

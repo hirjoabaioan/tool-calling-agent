@@ -23,7 +23,13 @@ export class AnthropicProvider implements Provider {
   private client: Anthropic;
 
   constructor(apiKey: string) {
-    this.client = new Anthropic({ apiKey, maxRetries: 0 });
+    // Org-level keys that are not scoped to a workspace must name one per request.
+    const workspace = process.env.ANTHROPIC_WORKSPACE_ID;
+    this.client = new Anthropic({
+      apiKey,
+      maxRetries: 0,
+      ...(workspace ? { defaultHeaders: { 'anthropic-workspace-id': workspace } } : {}),
+    });
   }
 
   async chat(req: ChatRequest): Promise<ChatResponse> {

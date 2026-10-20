@@ -11,6 +11,10 @@ export const cancelAppointment = defineTool({
   input: z.object({ appointmentId: z.string() }),
   summarize: (a) => `Cancel ${a.appointmentId}`,
   confirmLabel: 'Cancel appointment',
+  prepare: (args, ctx) => {
+    requireVisibleAppointment(args.appointmentId, ctx);
+    return args;
+  },
   handler: async (args, ctx) => {
     requireVisibleAppointment(args.appointmentId, ctx);
     return ctx.store.cancelAppointment(args.appointmentId);

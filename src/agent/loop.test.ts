@@ -28,15 +28,36 @@ describe('clientId scoping', () => {
     for (const a of rows) expect(payload).not.toContain(`"id":"${a.id}"`);
   });
 
-  it('hides other clients appointments on cancel', async () => {
-    const { store, mock, run, proposals } = setup();
-    const other = store.listAppointments({ status: 'scheduled' }).find((a) => a.clientId !== 'c-005');
-    mock.push({ toolCalls: [{ name: 'cancel_appointment', args: { appointmentId: other?.id } }] });
-    const actor = makeActor('client', 'user-5', 'c-005');
-    const result = await run(actor, 'cancel it');
+  it('shows the scoped clientId on the proposal, not the one the model guessed', async () => {
+    const { store, mock, run } = setup();
+    mock.push({ toolCalls: [{ name: 'create_appointment', args: { clientId: 'user-5', practitionerId: 'p-1', start: freeSlot(store) } }] });
+    const result = await run(makeActor('client', 'user-5', 'c-005'), 'book me');
     if (result.kind !== 'proposal') throw new Error('expected proposal');
-    await expect(proposals.confirm(result.proposal.id, { actor, store, now: NOW })).rejects.toThrow(/Unknown appointment/);
+    expect(result.proposal.args.clientId).toBe('c-005');
+  });
+
+  it('never proposes cancelling another clients appointment (dry-run refuses it)', async () => {
+    const { store, mock, run } = setup();
+    const other = store.listAppointments({ status: 'scheduled' }).find((a) => a.clientId !== 'c-005');
+    mock.push({ toolCalls: [{ name: 'cancel_appointment', args: { appointmentId: other?.id } }] }, { text: 'not found' });
+    const result = await run(makeActor('client', 'user-5', 'c-005'), 'cancel it');
+    expect(result.kind).toBe('text');
+    expect(JSON.stringify(mock.calls[1]?.messages.at(-1))).toContain('Unknown appointment');
     expect(store.getAppointment(other?.id ?? '')?.status).toBe('scheduled');
+  });
+
+  it('re-checks at confirm time: a proposal that became invalid is refused', async () => {
+    const { store, mock, run, proposals } = setup();
+    const own = store.listAppointments({ status: 'scheduled' })[0];
+    if (!own) throw new Error('seed has no scheduled appointment');
+    mock.push({ toolCalls: [{ name: 'cancel_appointment', args: { appointmentId: own.id } }] });
+    const actor = makeActor('client', 'user-x', own.clientId);
+    const result = await run(actor, 'cancel mine');
+    if (result.kind !== 'proposal') throw new Error('expected proposal');
+    // Ownership changes between proposal and confirm.
+    const appt = store.getAppointment(own.id);
+    if (appt) appt.clientId = own.clientId === 'c-009' ? 'c-010' : 'c-009';
+    await expect(proposals.confirm(result.proposal.id, { actor, store, now: NOW })).rejects.toThrow(/Unknown appointment/);
   });
 });
 

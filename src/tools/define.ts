@@ -29,6 +29,11 @@ export interface ToolInit<S extends z.ZodType> {
   /** Human-readable one-liner shown on the proposal (write tools). */
   summarize?: (args: z.infer<S>) => string;
   confirmLabel?: string;
+  /**
+   * Write tools: dry-run before a proposal is shown. Throws a ToolError when the action could
+   * never succeed for this actor, and returns the args the proposal should carry (e.g. scoped ids).
+   */
+  prepare?: (args: z.infer<S>, ctx: ToolContext) => z.infer<S>;
 }
 
 export interface Tool extends Guarded {
@@ -39,6 +44,7 @@ export interface Tool extends Guarded {
   handler: (args: unknown, ctx: ToolContext) => Promise<unknown>;
   summarize?: (args: unknown) => string;
   confirmLabel?: string;
+  prepare?: (args: unknown, ctx: ToolContext) => unknown;
 }
 
 export function defineTool<S extends z.ZodType>(init: ToolInit<S>): Tool {

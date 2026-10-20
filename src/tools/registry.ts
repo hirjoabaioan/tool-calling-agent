@@ -57,5 +57,7 @@ export async function executeConfirmed(proposal: { tool: string; args: unknown }
   if (!canUse(tool, ctx.actor)) throw new ToolError('forbidden', `Actor may not run ${tool.name}`);
   const parsed = tool.input.safeParse(proposal.args);
   if (!parsed.success) throw new ToolError('invalid_args', parsed.error.message);
-  return tool.handler(parsed.data, ctx);
+  // Re-run the dry-run: state may have changed since the proposal was made.
+  const args = tool.prepare ? tool.prepare(parsed.data, ctx) : parsed.data;
+  return tool.handler(args, ctx);
 }
